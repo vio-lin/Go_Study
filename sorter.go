@@ -6,13 +6,17 @@ import "bufio"
 import "io"
 import "os"
 import "strconv"
+import "time"
+
+import "GoStudy/algorithm/bubblesort"
+import "GoStudy/algorithm/qsort"
 
 var infile *string = flag.String("i", "infile", "File contains value for sorted")
 var outfile *string = flag.String("o", "outfile", "File to receive sorted values")
-var algorithm *string = flag.String("a", "qsort", "Sort algorithm")
+var algorithm *string = flag.String("a", "qsort", "Sort algorithm  qsort|bubble")
 
 func readValues(infile string) (values []int, err error) {
-	file, error := os.Open(infile)
+	file, err := os.Open(infile)
 	if err != nil {
 		fmt.Println("Faield to open the input file", infile)
 		return
@@ -65,20 +69,35 @@ func writeValues(values []int, outfile string) error {
 		str := strconv.Itoa(value)
 		file.WriteString(str + "\n")
 	}
-	return nil;
+	return nil
 }
 
 func main() {
 	flag.Parse()
 
 	if infile != nil {
-		fmt.Print(" infile = ", *infile, " outfile = ", *outfile, " algotith =", algorithm)
+		fmt.Println(" infile = ", *infile, " outfile = ", *outfile, " algotith = ", *algorithm)
 	}
 
 	values, err := readValues(*infile)
 	if err == nil {
+		t1 := time.Now()
+		switch *algorithm {
+		case "bubble":
+			bubblesort.Bubblesort(values)
+		case "qsort":
+			qsort.QuickSort(values)
+		default:
+			fmt.Println("Sorting algorithm", *algorithm, "is either unknown or unsupported.")
+		}
+		t2 := time.Now()
+
+		fmt.Println("The sorting process costs", t2.Sub(t1), "to complete.")
 		fmt.Println("Read Values", values)
+
+		writeValues(values, *outfile)
 	} else {
 		fmt.Println(err)
 	}
+
 }

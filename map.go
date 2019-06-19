@@ -9,7 +9,7 @@ type PersonInfo struct {
 	Address string
 }
 
-func main() {
+func nap_test() {
 	var personDB map[string]PersonInfo
 	personDB = make(map[string]PersonInfo)
 
